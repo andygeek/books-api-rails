@@ -1,0 +1,2 @@
+class Genero < ApplicationRecord
+end
