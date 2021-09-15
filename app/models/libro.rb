@@ -1,2 +1,0 @@
-class Libro < ApplicationRecord
-end
