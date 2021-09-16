@@ -1,19 +1,8 @@
 FROM ruby:3.0.2
-
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
-  echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
-  curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
-  apt-get update -qq && \
-  apt-get install -y vim nodejs sqlite3 libsqlite3-dev yarn && \
-  apt-get clean && \
-  rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-RUN mkdir /app
+RUN apt-get update -qq && apt-get install -y build-essential libpq-dev nodejs
 WORKDIR /app
-
-COPY Gemfile* /app/
-
-RUN gem install bundler -v 2.2.27 && \
-  bundle install --jobs 20
-
-COPY . /app
+COPY Gemfile /app/Gemfile
+COPY Gemfile.lock /app/Gemfile.lock
+RUN bundle install
+# Configure the main process to run when running the image
+CMD ["rails", "server", "-b", "0.0.0.0"]
